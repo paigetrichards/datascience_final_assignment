@@ -23,8 +23,8 @@ read_csv(nyt_usa_data_url) -> nyt_raw_data
 nyt_raw_data %>%
   pivot_longer(cases:deaths, names_to = "covid_type", values_to = "cumulative_number") -> nyt_data
 
-nyt_data %>%
-  mutate(cumulative_number = if_else(cumulative_number == 0, 1e-10, cumulative_number)) -> nyt_data #made zeros tiny numbers for log scale. May want to take this out. 
+#nyt_data %>%
+  #mutate(cumulative_number = if_else(cumulative_number == 0, 1e-10, cumulative_number)) -> nyt_data #made zeros tiny numbers for log scale. May want to take this out. 
 
 #date GOOD!
 #county GOOD!
@@ -55,8 +55,8 @@ jhu_raw_glob_deaths %>%
 
 bind_rows(jhu_wrangled_confirm, jhu_wrangled_deaths) -> jhu_data #couldn't use left join. This worked because there are double the amount of rows than there was before
 
-jhu_data %>%
-  mutate(cumulative_number = if_else(cumulative_number == 0, 1e-10, cumulative_number)) -> jhu_data
+#jhu_data %>%
+ # mutate(cumulative_number = if_else(cumulative_number == 0, 1e-10, cumulative_number)) -> jhu_data
 
 jhu_data %>%
   mutate(date = str_replace_all(date,"/", "-")) %>% #lubridate would not recognize the / as a date so I needed to string replace all / with -

@@ -16,8 +16,10 @@ library(colourpicker)
 library(ggthemr)
 library(plotly)
 library(shinyWidgets)
+#library(leaflet)
 
 themes_options <- c("Flat", "Sky", "Classic", "Chalk", "Dust", "Minimal", "Lilac", "Grey", "Sea", "Black and White", "Copper", "Dark", "Grass", "Light", "Camoflauge")
+
 
 source("covid_data_load.R") ## This line runs the Rscript "covid_data_load.R", which is expected to be in the same directory as this shiny app file!
 # The variables defined in `covid_data_load.R` are how fully accessible in this shiny app script!!
@@ -27,6 +29,22 @@ source("covid_data_load.R") ## This line runs the Rscript "covid_data_load.R", w
 ui <- shinyUI(
         navbarPage(theme = shinytheme("cyborg"), ### Uncomment the theme and choose your own favorite theme from these options: https://rstudio.github.io/shinythemes/
                    title = "COVID-19 Shiny App", ### Replace title with something reasonable
+            #tabPanel("USA Map of COVID-19 NYT Data",
+                     #sidebarPanel(
+                         #prettyRadioButtons("cases_deaths",
+                                            #"Do you want to see the US colored based on number of cases or deaths of COVID-19?",
+                                            #choices = c("Cases", "Deaths"),
+                                           # selected = "Cases",
+                                            #status = "info",
+                                           # shape = "curve",
+                                            #fill = TRUE,
+                                           # animation = "pulse"
+                       #  )
+                   #  ), #ends sidebarPanel
+                   #  mainPanel(
+                       #  leafletOutput(outputId = "mycovidmap", height = "500px", width = "700px")
+                   #  ) #ends mainPanel
+                   #  ), #ends tabPanel for usa map
             
             ## All UI for NYT goes in here:
             tabPanel("NYT data visualization", ## do not change this name
@@ -59,7 +77,7 @@ ui <- shinyUI(
                         numericInput("nyt_x_axis", 
                                      "Where do you want to begin the graph in regards to a day with *N* number of infections? **Note, if you choose to see the counties individually, set N to a low number such as 1. You may get a warning if you set the number too high because counties may not have that high of a number of cases recorded at this moment.**", 
                                      value = 1,
-                                     min = 1e-10), 
+                                     min = 0), 
                         pickerInput("which_theme_nyt",
                                     "What theme are you interested in seeing?",
                                     choices = themes_options,
@@ -99,7 +117,7 @@ ui <- shinyUI(
                          numericInput("jhu_x_axis", #input$jhu_x_axis
                                       "Where do you want to begin the graph in regards to a day with *N* number of infections? **Note, set N to a low number, at first, such as 1. You may get a warning if you set the number too high because some countries or specific provinces may not have that high of a number of cases recorded at this moment.**", 
                                       value = 1,
-                                      min = 1e-10),
+                                      min = 0),
                          prettyRadioButtons("jhu_y_scale", #input$jhu_y_scale
                                       "What type of scale do you want to see for the Y axis?",
                                       choices = c("Linear", "Log"),
@@ -128,7 +146,39 @@ server <- function(input, output, session) {
 
     ## PROTIP!! Don't forget, all reactives and outputs are enclosed in ({}). Not just parantheses or curly braces, but BOTH! Parentheses on the outside.
     
+    ##server logic for NYT data for map
     
+   # nyt_map_subset <- reactive({
+        
+      #  nyt_data %>%
+         #   pivot_wider(names_from = covid_type, values_from = cumulative_number) %>% #based on 1point3acres categorizing
+         #   mutate(cases_cat = case_when(cases< 0.9 ~ 'None',
+                                       # cases>= 1 & cases <= 1000 ~'Low',
+                                       #  cases>1000 & cases <= 5000 ~ 'Medium-low',
+                                        # cases>5000 & cases <= 10000 ~ 'Medium',
+                                        # cases>10000 & cases <= 500000 ~ 'Medium-high',
+                                         #cases>500000 ~ 'High')) %>%
+           # mutate(deaths_cat = case_when(deaths< 0.9 ~ 'None',
+                                         # deaths>= 1 & deaths <= 100 ~'Low',
+                                         # deaths>100 & deaths <=250 ~ 'Medium-low',
+                                         # deaths>250 & deaths <=500 ~ 'Medium',
+                                         # deaths>500 & deaths <=1000 ~ 'Medium-high',
+                                        #  deaths>1000 & deaths <= 5000 ~ 'High',
+                                        #  deaths>5000 ~ 'Very-High')) -> nyt_data_usa
+       # nyt_data_usa
+        
+  #  }) #ends reactive
+    
+    ##reactive for NYT data for map
+    
+   # output$mycovidmap <- renderLeaflet({
+        
+        #leaflet(nyt_data) %>%
+           # setView(lat = 40, lng = -95, zoom = 4) %>%
+           # addTiles() %>%
+            #addCircles()
+        
+   # }) #ends render plot
 
     
     ## All server logic for NYT goes here ------------------------------------------
