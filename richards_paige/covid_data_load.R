@@ -40,7 +40,7 @@ jhu_raw_glob_confirm %>%
   dplyr::rename(province_or_state = `Province/State`) %>%
   dplyr::rename(latitude = Lat) %>%
   dplyr::rename(longitude = Long) %>%
-  pivot_longer("1/22/20":"5/5/20", names_to = "date", values_to = "cumulative_number") %>%
+  pivot_longer(-"province_or_state":-"longitude", names_to = "date", values_to = "cumulative_number") %>%
   mutate(covid_type = "cases") -> jhu_wrangled_confirm
 
 read_csv(jhu_deaths_global_url) -> jhu_raw_glob_deaths
@@ -50,7 +50,7 @@ jhu_raw_glob_deaths %>%
   dplyr::rename(province_or_state = `Province/State`) %>%
   dplyr::rename(latitude = Lat) %>%
   dplyr::rename(longitude = Long) %>%
-  pivot_longer("1/22/20":"5/5/20", names_to = "date", values_to = "cumulative_number") %>%
+  pivot_longer(-"province_or_state":-"longitude", names_to = "date", values_to = "cumulative_number") %>%
   mutate(covid_type = "deaths") -> jhu_wrangled_deaths
 
 bind_rows(jhu_wrangled_confirm, jhu_wrangled_deaths) -> jhu_data #couldn't use left join. This worked because there are double the amount of rows than there was before

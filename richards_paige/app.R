@@ -271,12 +271,12 @@ print(
         if(input$facet_province == "Together"){
             jhu_country %>% #can't have lines going down. and pooled county data together
                 group_by(date, covid_type) %>%
-                summarize(y = sum(cumulative_number)) -> final_jhu_country
+            dplyr::summarize(y = sum(cumulative_number)) -> final_jhu_country
         }
         
         if(input$facet_province == "Individually"){
             jhu_country %>%
-                rename(y = cumulative_number) -> final_jhu_country
+                dplyr::rename(y = cumulative_number) -> final_jhu_country
         }
         
         
